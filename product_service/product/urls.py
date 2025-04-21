@@ -16,6 +16,4 @@ router.register(r'my-product', MyProductViewSet, basename='my-products')
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
-
-
 ]

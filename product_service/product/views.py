@@ -1,17 +1,12 @@
-import requests
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.response import Response
-from rest_framework.decorators import permission_classes, action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from rest_framework import viewsets
-
 from .auth_helpers import update_user
 from .models import Vendor, Product, Category
 from .serializers import VendorSerializer, ProductSerializer, CategorySerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
-
 
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -25,10 +20,10 @@ class VendorViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         slug = request.user_id
-        print("slug",slug)
+        print("slug", slug)
         is_vendor = request.is_vendor
         if is_vendor:
-            return Response({"Detail": "user have been vendor"}, status= status.HTTP_302_FOUND)
+            return Response({"Detail": "user have been vendor"}, status=status.HTTP_302_FOUND)
 
         data = self.request.data
         update = {"is_vendor": True}
@@ -64,16 +59,31 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    parser_classes = (MultiPartParser, FormParser)
-    lookup_field = 'slug'
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
+    lookup_field = 'id'
 
     def retrieve(self, request, *args, **kwargs):
-        slug = self.kwargs.get('slug')
-        print(slug)
-        product = get_object_or_404(Product, slug = slug)
+        product_id = self.kwargs.get('id')
+        print(product_id)
+        product = get_object_or_404(Product, id=product_id)
         serializer = self.get_serializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def update(self, request, *args, **kwargs):
+        try:
+            product_id = self.kwargs.get('id')
+            product = Product.objects.select_for_update().get(id=product_id)
+            serializer = ProductSerializer(product, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            print("Serializer errors:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            return Response({"error": "An unexpected error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class MyProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -93,7 +103,7 @@ class MyProductViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_403_FORBIDDEN)
         user_id = self.request.user_id
         data = self.request.data
-        product_image= self.request.FILES.get('image')
+        product_image = self.request.FILES.get('image')
         try:
             vendor = Vendor.objects.get(user_id=user_id)
             category = get_object_or_404(Category, id=data.get("category"))
@@ -140,17 +150,9 @@ class MyProductViewSet(viewsets.ModelViewSet):
             slug = self.kwargs.get('slug')
             print(f"Received pk: {slug}")
             product = Product.objects.get(id=slug)
-            #product = self.get_object()
             product.delete()
             return Response({'message': 'product item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Product.DoesNotExist:
             return Response({'message': 'Product item not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-
