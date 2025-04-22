@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 
@@ -63,6 +64,12 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def list(self, request, *args, **kwargs):
+        user_id = request.user_id
+        order = Order.objects.filter(user=user_id)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def create(self, request, *args, **kwargs):
         user_id = request.user_id
         data = request.data
@@ -94,6 +101,8 @@ class OrderViewSet(viewsets.ModelViewSet):
                     product=product_id,
                     quantity=quantity
                 )
+                vendor = product_data.get('vendor')
+                Shipping.objects.create(order=order, order_item=order_item, vendor=vendor.get("user_id"))
                 CartItem.objects.filter(product=product_id).delete()
 
                 update_data = {'stock': product_data.get('stock') - quantity}
@@ -115,4 +124,45 @@ class OrderViewSet(viewsets.ModelViewSet):
 class ShippingViewSet(viewsets.ModelViewSet):
     queryset = Shipping.objects.all()
     serializer_class = ShippingSerializer
+    lookup_field = 'id'
+
+    def list(self, request, *args, **kwargs):
+        user_id = request.user_id
+        if not self.request.is_vendor:
+            return Response({"detail": "You are not authorized as a vendor."},
+                            status=status.HTTP_403_FORBIDDEN)
+        shipping = Shipping.objects.filter(vendor=user_id)
+        serializer = ShippingSerializer(shipping)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
+        if not self.request.is_vendor:
+            return Response({"detail": "You are not authorized as a vendor."},
+                            status=status.HTTP_403_FORBIDDEN)
+        shipping_id = self.kwargs.get("id")
+        shipping = get_object_or_404(Shipping, id=shipping_id)
+        serializer = self.get_serializer(shipping)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        if not self.request.is_vendor:
+            return Response({"detail": "You are not authorized as a vendor."},
+                            status=status.HTTP_403_FORBIDDEN)
+        try:
+            shipping_id = self.kwargs.get('id')
+            shipping = Shipping.objects.select_for_update().get(id=shipping_id)
+            if shipping.delivered_at:
+                return Response({"detail": "Order was already delivered"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            serializer = ShippingSerializer(shipping, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Shipping.DoesNotExist:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": "An unexpected error occurred",
+                             "detail": str(e)
+                             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

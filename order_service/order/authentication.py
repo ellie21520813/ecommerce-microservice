@@ -24,4 +24,5 @@ class JWTAuthMiddleware(MiddlewareMixin):
             return JsonResponse({"detail": f"Invalid token error {error}"}, status=401)
 
         request.user_id = user_data.get('user')
+        request.is_vendor = user_data.get('is_vendor')
         return None

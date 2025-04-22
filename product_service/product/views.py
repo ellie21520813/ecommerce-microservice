@@ -93,6 +93,9 @@ class MyProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user_id = self.request.user_id
+        if not self.request.is_vendor:
+            return Response({"detail": "You are not authorized as a vendor."},
+                            status=status.HTTP_403_FORBIDDEN)
         vendor = Vendor.objects.get(user_id=user_id)
         print(Product.objects.filter(vendor=vendor))
         return Product.objects.filter(vendor=vendor)
