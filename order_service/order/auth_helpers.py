@@ -1,8 +1,11 @@
 import requests
 from requests.exceptions import RequestException
+from django.conf import settings
+#AUTH_BASE_URL = 'http://127.0.0.1:8000/api'
+#PRODUCT_BASE_URL = 'http://127.0.0.1:8001/api'
 
-AUTH_BASE_URL = 'http://127.0.0.1:8000/api'
-PRODUCT_BASE_URL = 'http://127.0.0.1:8001/api'
+AUTH_BASE_URL = settings.AUTH_BASE_URL
+PRODUCT_BASE_URL = settings.PRODUCT_BASE_URL
 
 
 def get_user(token):

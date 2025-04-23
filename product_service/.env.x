@@ -1,0 +1,17 @@
+SECRET_KEY='django-insecure-_%b2*jy#*pv+td7+yl$#(gg&c#sama#-+m2)$13a4jbyi6*=e4'
+
+SECRET_KEY_DB=my-very-secret-key
+DEBUG=True
+
+DB_NAME=product-db
+DB_USER=user
+DB_PASSWORD=password
+DB_HOST=product-db
+DB_PORT=5432
+
+
+ENV=local
+AUTH_BASE_URL=http://127.0.0.1:8000/api
+PRODUCT_BASE_URL=http://127.0.0.1:8001/api
+ORDER_BASE_URL=http://127.0.0.1:8002/api
+

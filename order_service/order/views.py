@@ -5,6 +5,7 @@ from rest_framework import viewsets, status
 from .auth_helpers import get_product, update_product
 from .models import Cart, CartItem, OrderItem, Order, Shipping
 from .serializers import CartSerializer, CartItemSerializer, OrderItemSerializer, OrderSerializer, ShippingSerializer
+from django.db import transaction
 
 
 class CartItemViewSet(viewsets.ModelViewSet):
@@ -143,7 +144,7 @@ class ShippingViewSet(viewsets.ModelViewSet):
         shipping = get_object_or_404(Shipping, id=shipping_id)
         serializer = self.get_serializer(shipping)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    @transaction.atomic
     def update(self, request, *args, **kwargs):
         if not self.request.is_vendor:
             return Response({"detail": "You are not authorized as a vendor."},

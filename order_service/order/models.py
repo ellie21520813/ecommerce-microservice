@@ -35,7 +35,7 @@ class OrderItem(models.Model):
 
 class Shipping(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='shipping')
-    order_item = models.OneToOneField(OrderItem, on_delete=models.CASCADE, related_name='shipping_item')
+    order_item = models.OneToOneField(OrderItem, on_delete=models.CASCADE, related_name='shipping_item', null=True, blank=True)
     vendor = models.IntegerField()
     shipping_method = models.CharField(max_length=255, default="Standard")
     shipping_cost = models.DecimalField(max_digits=100, decimal_places=2, default="5")

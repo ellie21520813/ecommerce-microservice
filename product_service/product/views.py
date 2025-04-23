@@ -7,6 +7,7 @@ from rest_framework import viewsets
 from .auth_helpers import update_user
 from .models import Vendor, Product, Category
 from .serializers import VendorSerializer, ProductSerializer, CategorySerializer
+from django.db import transaction
 
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -68,7 +69,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         product = get_object_or_404(Product, id=product_id)
         serializer = self.get_serializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+        
+    @transaction.atomic
     def update(self, request, *args, **kwargs):
         try:
             product_id = self.kwargs.get('id')
@@ -128,6 +130,7 @@ class MyProductViewSet(viewsets.ModelViewSet):
             print("❌ Error creating product:", str(e))
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    @transaction.atomic
     def update(self, request, *args, **kwargs):
         if not self.request.is_vendor:
             return Response({"detail": "You are not authorized as a vendor."},

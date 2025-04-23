@@ -16,6 +16,8 @@ from rest_framework import viewsets, status
 from .utils import sen_generaled_otp
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import permission_classes, api_view
+from django.db import transaction
+
 
 
 @permission_classes([AllowAny])
@@ -133,6 +135,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     lookup_field = 'slug'
 
+    @transaction.atomic
     def update(self, request, *args, **kwargs):
         try:
             slug = self.kwargs.get('slug')
