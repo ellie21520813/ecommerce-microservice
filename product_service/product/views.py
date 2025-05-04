@@ -90,7 +90,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class MyProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -102,7 +102,7 @@ class MyProductViewSet(viewsets.ModelViewSet):
         print(Product.objects.filter(vendor=vendor))
         return Product.objects.filter(vendor=vendor)
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         if not self.request.is_vendor:
             return Response({"detail": "You are not authorized as a vendor."},
                             status=status.HTTP_403_FORBIDDEN)
@@ -111,9 +111,9 @@ class MyProductViewSet(viewsets.ModelViewSet):
         product_image = self.request.FILES.get('image')
         try:
             vendor = Vendor.objects.get(user_id=user_id)
-            category = get_object_or_404(Category, id=data.get("category"))
+            category = get_object_or_404(Category, id=data.get('category'))
 
-            product = Product.objects.create(
+            product= Product.objects.create(
                 vendor=vendor,
                 category=category,
                 name=data.get('name'),
@@ -123,12 +123,15 @@ class MyProductViewSet(viewsets.ModelViewSet):
                 image=product_image,
                 is_flashsale=data.get('is_flashsale') in ['true', 'True', True],
             )
+
             return Response(ProductSerializer(product).data, status=status.HTTP_201_CREATED)
         except Vendor.DoesNotExist:
             return Response({'message': 'Vendor not found'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print("❌ Error creating product:", str(e))
-            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': str(e),
+                            'vendor': vendor
+            }, status=status.HTTP_400_BAD_REQUEST)
 
     @transaction.atomic
     def update(self, request, *args, **kwargs):

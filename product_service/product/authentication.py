@@ -10,6 +10,12 @@ EXEMPT_PATH = [
     re.compile(r'^/api/v1/category/.*$'),
     re.compile(r'^/admin/'),
     re.compile(r'^/favicon.ico/?$'),
+    re.compile(r'^/favicon.ico/.*$'),
+    re.compile(r'^/media/?$'),
+    re.compile(r'^/media/.*$'),
+    re.compile(r'^/static/?$'),
+    re.compile(r'^/static/?$'),
+
 ]
 
 

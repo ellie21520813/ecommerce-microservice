@@ -14,6 +14,9 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = '__all__'
+        extra_kwargs = {
+            'cart': {'required': False},
+        }
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

@@ -15,7 +15,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./auth_service:/app
-      - ./auth_service/.env:/app/.env
+      - ./auth_service/.env.docker:/app/.env
     ports:
       - "8000:8000"
     depends_on:

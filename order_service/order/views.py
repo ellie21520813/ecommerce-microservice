@@ -14,7 +14,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         user_id = request.user_id
-        product_id = request.data.get('id')
+        product_id = request.data.get('product')
         quantity = request.data.get('quantity')
 
         cart, created = Cart.objects.get_or_create(user=user_id)

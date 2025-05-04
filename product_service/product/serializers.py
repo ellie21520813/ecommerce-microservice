@@ -19,11 +19,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
+    category = CategorySerializer()
     vendor = VendorSerializer(read_only=True)
+    id = serializers.IntegerField(read_only=True)
 
 
     class Meta:
         model = Product
-        fields = ['vendor', 'category', 'name', 'slug', 'description', 'stock', 'price', 'image', 'is_flashsale']
+        fields = ['id', 'vendor', 'category', 'name', 'slug', 'description', 'stock', 'price', 'image', 'is_flashsale']
+        
 
