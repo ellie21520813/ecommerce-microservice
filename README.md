@@ -48,10 +48,6 @@ docker-compose up --build
 | auth_service    | 8000 | User authentication                    |
 | product_service | 8001 | Product and vendor management          |
 | order_service   | 8002 | Order and cart management              |
-| blog_service    | 8003 | Blog post service                      |
-| misc_service    | 8004 | Miscellaneous info (FAQ, contact, etc.)|
-| rabbitmq        | 5672 | Message broker for Celery              |
-| redis           | 6379 | Caching and Celery backend             |
 | postgres        | 5432 | PostgreSQL database for each service   |
 
 ## 📂 Project Structure
