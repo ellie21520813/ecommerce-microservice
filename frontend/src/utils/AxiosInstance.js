@@ -27,7 +27,7 @@ const createAxiosInstance = (customBaseURL)=>{
             if (!isExpired) return req;
 
             try {
-                const resp = await axios.post(`http://localhost:8000/api/token/refresh/`, {
+                const resp = await axios.post(`http://0.0.0.0:8080/api/token/refresh/`, {
                     refresh: refresh_token
                 });
 

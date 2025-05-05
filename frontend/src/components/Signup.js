@@ -38,7 +38,7 @@ const Signup = () => {
 
         try {
             console.log(formdata)
-            const response = await axios.post('http://localhost:8000/api/signup/', formdata);
+            const response = await axios.post('http://0.0.0.0:8080/api/signup/', formdata);
             console.log(response.data);
             const result = response.data;
             if (response.status === 201) {

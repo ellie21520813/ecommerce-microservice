@@ -20,6 +20,7 @@ import MyProducts from "./components/MyProducts";
 import UpdateProduct from "./components/UpdateProduct";
 import {useDispatch} from "react-redux";
 import {logout} from "./redux/actions/usersAction";
+import PrivateRoute from './components/PrivateRoute';
 
 
 function App() {
@@ -34,26 +35,30 @@ function App() {
     const dispatch = useDispatch();
     const access = localStorage.getItem("access_token");
     const refresh = localStorage.getItem("refresh_token");
-    const userInfor = localStorage.getItem("user")
+    const userInfor =  JSON.parse(localStorage.getItem("user"))
+    const vendor = JSON.parse(localStorage.getItem('vendor'))
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
     useEffect(() => {
-    
         if (access && refresh) {
           dispatch({
             type: "RESTORE_TOKENS",
             payload: {
               token: access,
               refresh_token: refresh,
-              user: userInfor
+              user: userInfor,
+              vendor: vendor
             }
           });
         }
-      }, [dispatch]);
-
-
+        setIsLoadingAuth(false); 
+    }, [dispatch]);
+    if (isLoadingAuth) {
+        return <div>Loading authentication...</div>;
+    }
 
     const handleLogout = async () => {
-        const authenAPI = createAxiosInstance("http://localhost:8000/api/");
+        const authenAPI = createAxiosInstance("http://0.0.0.0:8080/api/");
 
 
         if (!refresh) {
@@ -182,18 +187,18 @@ function App() {
                 <Route path='/products/:id' element={<ProductDetails/>}/>
                 <Route path='/search' element={<SearchResultsPage/>}/>
                 <Route path='/categories/:slug' element={<CategoryPage/>}/>
-                <Route path='/cart' element={<CartPage cart={cart} setCart={setCart}/>}/>
-                <Route path={'/checkout'} element={<CheckoutPage cart={cart} setCart={setCart}/>}/>
                 <Route path='/signup' element={<Signup/>}/>
                 <Route path={'/login'} element={<Login/>}/>
                 <Route path={'/otp/verify'} element={<VerifyEmail/>}/>
-                <Route path='/dashboard' element={<Profile/>}/>
                 <Route path='/forget-password' element={<PasswordResetRequest/>}/>
                 <Route path='/password-reset-confirm/:uid/:token' element={<ResetPassword/>}/>
-                <Route path = '/register-vendor' element ={<RegisteVendor/>}/>
-                <Route path='/add-product' element={<AddProduct/>}/>
-                <Route path='/myproducts' element={<MyProducts/>}/>
-                <Route path='/edit-product/:slug' element={<UpdateProduct/>}/>
+                <Route path='/cart' element={<PrivateRoute><CartPage cart={cart} setCart={setCart}/></PrivateRoute>}/>
+                <Route path={'/checkout'} element={<PrivateRoute><CheckoutPage cart={cart} setCart={setCart}/></PrivateRoute>}/>
+                <Route path='/dashboard' element={<PrivateRoute><Profile/></PrivateRoute>}/>
+                <Route path = '/register-vendor' element ={<PrivateRoute><RegisteVendor/></PrivateRoute>}/>
+                <Route path='/add-product' element={<PrivateRoute><AddProduct/></PrivateRoute>}/>
+                <Route path='/myproducts' element={<PrivateRoute><MyProducts/></PrivateRoute>}/>
+                <Route path='/edit-product/:slug' element={<PrivateRoute><UpdateProduct/></PrivateRoute>}/>
 
 
                 {/*add more routes as needed*/}

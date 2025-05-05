@@ -3,15 +3,22 @@ import {Link, useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {fetchCarts} from "../redux/actions/cartsActions";
 import {createOrder} from "../redux/actions/ordersActions";
+import { fetchProductsDetailsBatch } from '../redux/actions/productsActions';
 
 const CheckoutPage=()=>{
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const cart_items = useSelector(state => state.carts)
-    console.log(cart_items)
-    useEffect(()=>{
-        dispatch(fetchCarts())
-    },[dispatch]);
+    const productDetailsBatch = useSelector(state=>state.products.productBatch)
+    useEffect(() => {
+        dispatch(fetchCarts()).then((res)=>{
+            const productIds = new Set()
+            res.payload.forEach(cart => {
+                cart.items.forEach(item => productIds.add(item.product));
+            });
+            dispatch(fetchProductsDetailsBatch(Array.from(productIds)))
+        })
+    }, [dispatch]);
     const calculateTotal=()=>{
         let total = 0;
         for(const cart of cart_items){
@@ -158,25 +165,27 @@ const CheckoutPage=()=>{
                             </tr>
                             </thead>
                             <tbody>
-                            {cart_items.map((cart) => (
-                                cart.items.map((item) =>
-                                    <tr key={item.product.id}>
-                                        <td>
-                                            <Link to={`/products/${item.product.slug}`}>{item.product.name}</Link>
-                                        </td>
-                                        <td>${parseFloat(item.product.price).toFixed(2)}</td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                defaultValue={item.quantity}
-                                            />
-                                        </td>
-                                        <td>
-                                            ${(parseFloat(item.product.price) * item.quantity).toFixed(2)}
-                                        </td>
-                                    </tr>
-                                )
+                            {cart_items.map((cartitem) => (
+                                cartitem.items.map((item) => {
+                                    const product = productDetailsBatch[item.product];
+                                    if (!product) return null; 
+                                    return (
+                                        <tr key={item.id}>
+                                            <td>
+                                                <Link to={`/products/${product.id}`}>{product.name}</Link>
+                                            </td>
+                                            <td>${parseFloat(product.price).toFixed(2)}</td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    value={item.quantity}
+                                                    readOnly
+                                                />
+                                            </td>
+                                            <td>${(parseFloat(product.price) * item.quantity).toFixed(2)}</td>
+                                        </tr>
+                                    );
+                                })
                             ))}
                             </tbody>
                         </table>

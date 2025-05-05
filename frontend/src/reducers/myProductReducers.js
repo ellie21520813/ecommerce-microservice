@@ -26,7 +26,7 @@ const myProductReducers = (state = initialState, action) =>{
         case 'UPDATE_PRODUCT':
             return {
                 ...state,
-                products: state.products.map(product =>
+                myProducts: state.myProducts.map(product =>
                     product.slug === action.payload.slug ? action.payload : product
                 ),
                 productDetails: state.productDetails?.slug === action.payload.slug ? action.payload : state.productDetails

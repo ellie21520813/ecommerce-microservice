@@ -5,7 +5,7 @@ import { productAPI } from "../../api";
 
 export const getMyProducts = ()=> async (dispatch)=>{
     try{
-        const response = await productAPI.get('my-products/');
+        const response = await productAPI.get('my-product/');
         dispatch({
             type: 'SET_MY_PRODUCTS',
             payload: response.data});
@@ -18,7 +18,7 @@ export const getMyProducts = ()=> async (dispatch)=>{
 
 export const deleteMyProduct = (myproductId)=> async (dispatch)=>{
     try{
-        await productAPI.delete(`my-products/${myproductId}/`);
+        await productAPI.delete(`my-product/${myproductId}/`);
         dispatch({type:'DELETE_MY_PRODUCTS', payload: myproductId
         })
     }catch (e){
@@ -29,7 +29,7 @@ export const deleteMyProduct = (myproductId)=> async (dispatch)=>{
 
 export const addProduct=(productData)=> async (dispatch)=>{
     try{
-        const response = await productAPI.post("my-products/", productData, {
+        const response = await productAPI.post("my-product/", productData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -52,7 +52,7 @@ export const addProduct=(productData)=> async (dispatch)=>{
 
 export const updateProduct=(slug, dataUpdate)=> async (dispatch)=>{
     try{
-        const response = await productAPI.put(`my-products/${slug}/`, dataUpdate, {
+        const response = await productAPI.put(`my-product/${slug}/`, dataUpdate, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

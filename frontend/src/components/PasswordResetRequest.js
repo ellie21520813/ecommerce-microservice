@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {useNavigate} from "react-router-dom";
-import AxiosInstance from '../utils/AxiosInstance'
+import { authAPI } from '../api';
 
 const PasswordResetRequest = () => {
     const [email, setEmail]=useState("")
@@ -10,7 +10,7 @@ const PasswordResetRequest = () => {
     const handleSubmit = async(e)=>{
         e.preventDefault()
         if (email) {
-          const res = await AxiosInstance.post('password-reset/', {'email':email})
+          const res = await authAPI.post('password-reset/', {'email':email})
            if (res.status === 200) {
             console.log(res.data)
             alert('a link to reset your password has be sent to your email')

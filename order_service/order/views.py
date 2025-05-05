@@ -68,7 +68,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user_id = request.user_id
         order = Order.objects.filter(user=user_id)
-        serializer = OrderSerializer(order)
+        serializer = OrderSerializer(order, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):

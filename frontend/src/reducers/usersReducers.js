@@ -2,7 +2,8 @@ const initialState={
     user: null,
     token: null,
     refresh_token: null,
-    isAuthenticated: null
+    isAuthenticated: false,
+    vendor: null
 }
 
 const usersReducers = (state=initialState, action)=>{
@@ -16,7 +17,8 @@ const usersReducers = (state=initialState, action)=>{
                 },
                 token: action.payload.access_token,
                 refresh_token: action.payload.refresh_token,
-                isAuthenticated: true
+                isAuthenticated: true,
+                vendor: action.payload.is_vendor
             };
 
         case 'LOGOUT':
@@ -25,7 +27,8 @@ const usersReducers = (state=initialState, action)=>{
                 user: null,
                 token: null,
                 refresh_token: null,
-                isAuthenticated: false
+                isAuthenticated: false,
+                vendor: null
             }
 
         case 'UPDATE_ACCESS_TOKEN':
@@ -40,7 +43,8 @@ const usersReducers = (state=initialState, action)=>{
                 token: action.payload.token,
                 refresh_token: action.payload.refresh_token,
                 user: action.payload.user,
-                isAuthenticated: true
+                isAuthenticated: true,
+                vendor: action.payload.vendor
             };
         default:
             return state

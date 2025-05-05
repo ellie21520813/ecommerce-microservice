@@ -2,6 +2,7 @@ const initialState = {
     products: [],
     productDetails: null,
     newProduct: [],
+    productBatch:{}
 };
 
 const productsReducer = (state = initialState, action) =>{
@@ -17,6 +18,12 @@ const productsReducer = (state = initialState, action) =>{
                 ...state,
                 productDetails: action.payload || null
             };
+
+        case 'SET_PRODUCT_BATCH':
+            return{
+                ...state,
+                productBatch: action.payload
+            }
 
         default:
             return state;

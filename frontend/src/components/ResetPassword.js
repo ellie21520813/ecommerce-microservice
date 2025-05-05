@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import AxiosInstance from '../utils/AxiosInstance';
+import { authAPI } from '../api';
 
 const ResetPassword = () => {
   const navigate=useNavigate()
@@ -25,7 +25,7 @@ const data={
  const handleSubmit =async (e)=>{
     e.preventDefault()
     if (data) {
-      const res = await AxiosInstance.patch('set-new-password/', data)
+      const res = await authAPI.patch('set-new-password/', data)
       const response = res.data
       if (res.status === 200) {
            navigate('/login')

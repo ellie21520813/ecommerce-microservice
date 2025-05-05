@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import { useNavigate} from "react-router-dom";
-import { productAPI } from '../api';
+import { productAPI, authAPI } from '../api';
 
 const RegisteVendor = ()=>{
     const navigate = useNavigate()
     const [formdata, setFormData] = useState({
         bio:"",
-        contact_details:"",
-        bank_details:"",
+        contact_detail:"",
+        bank_detail:"",
         shipping_policy:"",
         return_policy:"",
     })
-    const {bio, contact_details, bank_details, shipping_policy, return_policy} = formdata
+    const {bio, contact_detail, bank_detail, shipping_policy, return_policy} = formdata
     const handleOnchange =(e)=>{
         setFormData({...formdata, [e.target.name]: e.target.value})
     }
@@ -47,22 +47,22 @@ const RegisteVendor = ()=>{
                         required/>
                 </div>
                 <div>
-                    <label htmlFor="contact_details">Contact Details</label>
+                    <label htmlFor="contact_detail">Contact Details</label>
                     <input
                         type="text"
-                        id="contact_details"
-                        name="contact_details"
-                        value={contact_details}
+                        id="contact_detail"
+                        name="contact_detail"
+                        value={contact_detail}
                         onChange={handleOnchange}
                         required/>
                 </div>
                 <div>
-                    <label htmlFor="bank_details">Bank Details</label>
+                    <label htmlFor="bank_detail">Bank Details</label>
                     <input
                         type="text"
-                        id="bank_details"
-                        name="bank_details"
-                        value={bank_details}
+                        id="bank_detail"
+                        name="bank_detail"
+                        value={bank_detail}
                         onChange={handleOnchange}
                         required/>
                 </div>

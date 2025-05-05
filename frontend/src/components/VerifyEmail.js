@@ -9,7 +9,7 @@ const VerifyEmail = () => {
     const handleOtpSubmit = async (e) => {
         e.preventDefault()
         if (otp) {
-            const res = await axios.post('http://localhost:8000/api/verify-email/', {'otp': otp})
+            const res = await axios.post('http://0.0.0.0:8080/api/verify-email/', {'otp': otp})
             const resp = res.data
             if (res.status === 200) {
                 navigate('/login')

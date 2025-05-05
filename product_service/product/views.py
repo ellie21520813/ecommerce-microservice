@@ -8,6 +8,7 @@ from .auth_helpers import update_user
 from .models import Vendor, Product, Category
 from .serializers import VendorSerializer, ProductSerializer, CategorySerializer
 from django.db import transaction
+from rest_framework.decorators import api_view
 
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -141,7 +142,7 @@ class MyProductViewSet(viewsets.ModelViewSet):
         try:
             slug = self.kwargs.get('slug')
             print(slug)
-            product = Product.objects.select_for_update().get(slug=slug)
+            product = Product.objects.select_for_update().get(id=slug)
             serializer = ProductSerializer(product, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -165,3 +166,14 @@ class MyProductViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Product item not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_product_batch(request):
+    ids = request.GET.get('ids')
+    if not ids:
+        return Response({"error":"not ids"}, status=status.HTTP_400_BAD_REQUEST)
+    id_list = [int(pk) for  pk in ids.split(',')]
+    products = Product.objects.filter(id__in=id_list)
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

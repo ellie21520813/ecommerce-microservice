@@ -7,6 +7,11 @@ from .auth_helpers import get_user_detail
 EXEMPT_PATH = [
     re.compile(r'^/admin/'),
     re.compile(r'^/favicon.ico/?$'),
+    re.compile(r'^/favicon.ico/.*$'),
+    re.compile(r'^/media/?$'),
+    re.compile(r'^/media/.*$'),
+    re.compile(r'^/static/?$'),
+    re.compile(r'^/static/?$'),
 ]
 
 

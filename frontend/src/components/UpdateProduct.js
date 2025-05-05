@@ -154,7 +154,7 @@ const UpdateProduct=()=>{
                     <label className="form-check-label">Flash Sale</label>
                 </div>
 
-                <button type="submit" className="btn btn-primary mt-4">Add Product</button>
+                <button type="submit" className="btn btn-primary mt-4">Update Product</button>
             </form>
 
         </div>

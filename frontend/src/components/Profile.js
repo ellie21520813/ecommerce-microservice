@@ -7,34 +7,15 @@ import {fetchOrders} from "../redux/actions/ordersActions";
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const token = useSelector(state => state.authen.token);
   const user = useSelector(state => state.authen.user);
   const orders = useSelector(state => state.order.orders);
-
-  const [is_vendor, setIsVendor] = useState();
-
-  useEffect(() => {
-    if (!token || !user) {
-      navigate('/login');
-    } else {
-      getSomeData();
-    }
-  }, [token, user, navigate]);
+  const is_vendor = useSelector(state=>state.authen.vendor)
 
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
 
-  const getSomeData = async () => {
-    try {
-      const res = await AxiosInstance.get('get-something/');
-      setIsVendor(res.data.is_vendor);
-      console.log('vendor', res.data);
-    } catch (error) {
-      console.error('Failed to fetch vendor data', error);
-    }
-  }
+  
 
   const register_vendor = () => {
     navigate('/register-vendor');

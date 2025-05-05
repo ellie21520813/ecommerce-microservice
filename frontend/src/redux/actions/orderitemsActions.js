@@ -4,7 +4,7 @@ import { orderAPI } from "../../api"
 
 export const fetchOrderItems = ()=> async (dispatch)=>{
     try{
-        const response = await orderAPI.get('order-items/')
+        const response = await orderAPI.get('order-item/')
         dispatch({
             type: 'SET_ORDER_ITEMS',
             payload: response.data

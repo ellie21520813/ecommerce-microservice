@@ -2,7 +2,7 @@ import { orderAPI } from "../../api";
 
 export const fetchOrders = ()=> async (dispatch)=>{
     try{
-        const response = await orderAPI.get("orders/");
+        const response = await orderAPI.get("order/");
         dispatch({
             type: 'SET_ORDERS',
             payload: response.data
@@ -16,7 +16,7 @@ export const fetchOrders = ()=> async (dispatch)=>{
 
 export const createOrder = (order)=> async (dispatch)=>{
     try{
-        const response = await orderAPI.post('orders/', order);
+        const response = await orderAPI.post('order/', order);
         console.log("Order created successfully:", response.data);
         if (response.status === 201) {
             dispatch({

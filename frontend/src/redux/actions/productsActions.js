@@ -26,3 +26,18 @@ export const fetchProductsDetails=(id)=> async (dispatch) =>{
     }
 }
 
+export const fetchProductsDetailsBatch = (productIds)=>async (dispatch)=>{
+    try{
+        const idsParam = productIds.join(',')
+        const response = await productAPI.get(`product-cart/batch/?ids=${idsParam}`)
+        const productMap = {}
+        response.data.forEach(product => {
+            productMap[product.id] = product;
+        });
+        dispatch({ type: 'SET_PRODUCT_BATCH', payload: productMap });
+    } 
+    catch (error) {
+        console.error('Failed to fetch product details:', error);
+    }
+    
+}

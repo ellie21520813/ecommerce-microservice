@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import VendorViewSet, ProductViewSet, CategoryViewSet, MyProductViewSet
+from .views import VendorViewSet, ProductViewSet, CategoryViewSet, MyProductViewSet, get_product_batch
 from rest_framework_simplejwt.views import (TokenRefreshView,)
 
 
@@ -16,4 +16,5 @@ router.register(r'my-product', MyProductViewSet, basename='my-products')
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
+    path('api/v1/product-cart/batch/',get_product_batch, name='product-batch')
 ]
