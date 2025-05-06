@@ -28,7 +28,7 @@ cd ecommerce-microservice
 ### 🏗️ Step 3: Build and start the application
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 > This may take a few minutes to pull images and build containers.
