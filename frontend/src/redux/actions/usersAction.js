@@ -1,7 +1,7 @@
 import axios from "axios";
 export const fetchUsers =(user_data)=>async (dispatch)=>{
     try{
-        const res = await axios.post('http://0.0.0.0:8080/api/login/', user_data)
+        const res = await axios.post('http://localhost:8080/api/login/', user_data)
         if(res.status === 200) {
             localStorage.setItem("access_token", res.data.access_token);
             localStorage.setItem("refresh_token", res.data.refresh_token);

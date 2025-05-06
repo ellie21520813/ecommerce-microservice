@@ -58,7 +58,7 @@ function App() {
     }
 
     const handleLogout = async () => {
-        const authenAPI = createAxiosInstance("http://0.0.0.0:8080/api/");
+        const authenAPI = createAxiosInstance("http://localhost:8080/api/");
 
 
         if (!refresh) {

@@ -66,7 +66,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://0.0.0.0"
+    "http://0.0.0.0:8080",
+    "http://localhost:8080"
 ]
 
 CORS_ALLOWED_HEADERS = (
@@ -127,6 +128,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_DOMAIN = "http://localhost:8080"
 
 
 # Password validation

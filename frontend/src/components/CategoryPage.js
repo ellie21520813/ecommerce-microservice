@@ -11,7 +11,7 @@ const CategoryPage=() =>{
     useEffect(()=>{
         const fetchCategorytAndProducts = async () =>{
             try{
-                const response = await axios.get(`http://0.0.0.0:8080/api/products/?category=${slug}`);
+                const response = await axios.get(`http://localhost:8080/api/products/?category=${slug}`);
                 const data = response.data;
                 const currentCategory = data.find((product)=>product.category.slug===slug);
                 const filteredProducts = data.filter((product) => product.category.slug === slug);

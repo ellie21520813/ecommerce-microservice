@@ -5,7 +5,7 @@ COPY frontend/package.json frontend/package-lock.json ./
 RUN npm install
 
 COPY frontend/ ./
-RUN npm run build
+RUN npm run build && ls -lah /app/build
 
 FROM nginx:alpine
 COPY --from=builder /app/build /usr/share/nginx/html

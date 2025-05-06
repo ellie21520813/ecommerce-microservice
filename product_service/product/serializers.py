@@ -2,6 +2,7 @@ import requests
 
 from .models import Vendor, Product, Category
 from rest_framework import serializers
+from django.conf import settings
 
 
 class VendorSerializer(serializers.ModelSerializer):
@@ -27,5 +28,10 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'vendor', 'category', 'name', 'slug', 'description', 'stock', 'price', 'image', 'is_flashsale']
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        domain = settings.DEFAULT_DOMAIN
+        return f"{domain}{obj.image.url}" if obj.image else ""
         
 
